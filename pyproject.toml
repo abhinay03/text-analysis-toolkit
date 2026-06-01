@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "text-analysis-toolkit"
+version = "1.0.0"
+description = "A package for tokenization, word frequency analysis, sentiment scoring, and report generation"
+requires-python = ">=3.9"
+
+[project.scripts]
+text-analysis = "text_analysis_toolkit.cli:main"
