@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}Text Analysis Toolkit — NLP in Pure Python{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Pure Python &bull; No Dependencies &bull; v1.0.0
+        </div>
+        <h1 class="hero-title">
+            Text Analysis<br>
+            <span class="gradient-text">Made Simple</span>
+        </h1>
+        <p class="hero-subtitle">
+            A production-ready NLP toolkit for tokenization, frequency analysis,
+            sentiment scoring, and report generation — built entirely on Python's
+            standard library with zero external dependencies.
+        </p>
+        <div class="hero-actions">
+            <a href="/demo" class="btn btn-primary btn-lg">
+                Try Live Demo
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="/documentation" class="btn btn-secondary btn-lg">
+                Read the Docs
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-value">5</span>
+                <span class="hero-stat-label">Modules</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">46+</span>
+                <span class="hero-stat-label">Unit Tests</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">0</span>
+                <span class="hero-stat-label">Dependencies</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features" id="features">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Everything You Need for Text Analysis</h2>
+            <p class="section-desc">Five tightly integrated modules that work together or standalone.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #6366f1">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </div>
+                <h3 class="feature-title">Tokenization</h3>
+                <p class="feature-desc">Split text into words and sentences, remove punctuation, filter stopwords, and generate n-grams with full control over preprocessing.</p>
+                <div class="feature-code">
+                    <code>Tokenizer(lower=True, remove_punct=True)</code>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #06b6d4">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 16V8m4 8v-4m4 4V6m4 10v-2"/></svg>
+                </div>
+                <h3 class="feature-title">Frequency Analysis</h3>
+                <p class="feature-desc">Count words, find the most frequent terms, compute relative frequencies, and filter words above configurable thresholds.</p>
+                <div class="feature-code">
+                    <code>FrequencyAnalyzer(tokens).top_words(10)</code>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #f59e0b">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10m0 0l-4 4m4-4l4 4"/><circle cx="12" cy="12" r="10"/></svg>
+                </div>
+                <h3 class="feature-title">Sentiment Scoring</h3>
+                <p class="feature-desc">Lexicon-based sentiment analysis with 100+ built-in positive and negative words. Support for custom lexicons and detailed scoring reports.</p>
+                <div class="feature-code">
+                    <code>SentimentAnalyzer().score(tokens)</code>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #10b981">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+                </div>
+                <h3 class="feature-title">Report Generation</h3>
+                <p class="feature-desc">Generate beautifully formatted plain text and JSON reports with statistics, frequency tables, n-grams, and sentiment summaries.</p>
+                <div class="feature-code">
+                    <code>ReportGenerator(title="Report").generate_text(...)</code>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #ec4899">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                </div>
+                <h3 class="feature-title">Unified API</h3>
+                <p class="feature-desc">The <code>TextAnalyzer</code> facade runs the entire pipeline — tokenize, analyze frequency, score sentiment, and generate n-grams — in one call.</p>
+                <div class="feature-code">
+                    <code>TextAnalyzer().analyze("Your text here")</code>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="--icon-color: #8b5cf6">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h3 class="feature-title">CLI Ready</h3>
+                <p class="feature-desc">Analyze text files or inline text directly from the terminal. Supports JSON output, stopword removal, configurable n-grams, and file output.</p>
+                <div class="feature-code">
+                    <code>text-analysis samples/review.txt -f json</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="quick-demo" id="quick-demo">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">See It In Action</h2>
+            <p class="section-desc">Enter any text below and get instant analysis.</p>
+        </div>
+        <div class="demo-mini">
+            <div class="demo-input-group">
+                <textarea id="quick-text" class="demo-textarea" placeholder="Type or paste text here..." rows="4">I love this amazing product! It is fantastic and wonderful. The quality is outstanding and the service was excellent. Highly recommended!</textarea>
+            </div>
+            <div class="demo-mini-actions">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="quick-stopwords">
+                    <span class="checkbox-custom"></span>
+                    Remove stopwords
+                </label>
+                <button onclick="quickAnalyze()" class="btn btn-primary" id="quick-btn">
+                    <span class="btn-text">Analyze</span>
+                    <span class="btn-loader" style="display:none">
+                        <svg viewBox="0 0 24 24" width="18" height="18" class="spin"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4"/></svg>
+                    </span>
+                </button>
+            </div>
+            <div id="quick-results" class="demo-mini-results" style="display:none">
+                <div class="mini-stats">
+                    <div class="mini-stat"><span class="mini-stat-val" id="q-words">0</span><span class="mini-stat-lbl">Words</span></div>
+                    <div class="mini-stat"><span class="mini-stat-val" id="q-unique">0</span><span class="mini-stat-lbl">Unique</span></div>
+                    <div class="mini-stat"><span class="mini-stat-val" id="q-sentences">0</span><span class="mini-stat-lbl">Sentences</span></div>
+                    <div class="mini-stat"><span class="mini-stat-val" id="q-sentiment">0.00</span><span class="mini-stat-lbl">Score</span></div>
+                </div>
+                <div class="mini-words">
+                    <span class="mini-label">Top words:</span>
+                    <div class="mini-tags" id="q-topwords"></div>
+                </div>
+                <a href="/demo" class="btn btn-ghost btn-sm">Full demo &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="code-samples" id="usage">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Simple, Clean API</h2>
+            <p class="section-desc">Designed for readability. Works as a library or from the command line.</p>
+        </div>
+        <div class="code-tabs">
+            <div class="code-tab-headers">
+                <button class="code-tab-btn active" data-tab="python">Python API</button>
+                <button class="code-tab-btn" data-tab="cli">CLI</button>
+            </div>
+            <div class="code-tab-panel active" id="tab-python">
+                <pre class="code-block"><code><span class="kw">from</span> <span class="mod">text_analysis_toolkit</span> <span class="kw">import</span> <span class="cls">TextAnalyzer</span>
+
+<span class="com"># Analyze any text in one line</span>
+ta = <span class="cls">TextAnalyzer</span>(remove_stopwords=<span class="kc">True</span>)
+result = ta.<span class="fu">analyze</span>(<span class="s">"I love this amazing product! It is fantastic."</span>)
+
+<span class="bu">print</span>(result[<span class="s">"statistics"</span>])
+<span class="com"># {total_words: 12, unique_words: 11, sentences: 2, ...}</span>
+
+<span class="bu">print</span>(result[<span class="s">"sentiment"</span>][<span class="s">"sentiment_label"</span>])
+<span class="com"># "positive"</span>
+
+<span class="bu">print</span>(ta.<span class="fu">report_text</span>(result))
+<span class="com"># Formatted text report with tables</span></code></pre>
+            </div>
+            <div class="code-tab-panel" id="tab-cli">
+                <pre class="code-block"><code><span class="com"># Analyze a text file</span>
+text-analysis samples/positive_review.txt
+
+<span class="com"># JSON output</span>
+text-analysis samples/mixed_article.txt -f json
+
+<span class="com"># Remove stopwords</span>
+text-analysis samples/negative_review.txt --no-stopwords
+
+<span class="com"># Analyze inline text</span>
+text-analysis -t <span class="s">"I love this amazing product!"</span>
+
+<span class="com"># Save report to file</span>
+text-analysis samples/article.txt -o report.txt
+
+<span class="com"># Install locally</span>
+pip install -e .</code></pre>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll('.code-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.code-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.code-tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
+</script>
+{% endblock %}

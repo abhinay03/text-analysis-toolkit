@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+{% block title %}Documentation — Text Analysis Toolkit{% endblock %}
+{% block content %}
+<section class="doc-hero">
+    <div class="section-container">
+        <h1 class="doc-title">Documentation</h1>
+        <p class="doc-subtitle">Complete reference for every module in the Text Analysis Toolkit.</p>
+        <nav class="doc-toc">
+            <a href="#tokenizer" class="toc-link">Tokenizer</a>
+            <a href="#frequency" class="toc-link">FrequencyAnalyzer</a>
+            <a href="#sentiment" class="toc-link">SentimentAnalyzer</a>
+            <a href="#reporter" class="toc-link">ReportGenerator</a>
+            <a href="#textanalyzer" class="toc-link">TextAnalyzer</a>
+            <a href="#cli" class="toc-link">CLI Reference</a>
+        </nav>
+    </div>
+</section>
+
+<section class="doc-content">
+    <div class="section-container">
+
+        <article id="tokenizer" class="doc-article">
+            <h2 class="doc-article-title">Tokenizer</h2>
+            <p class="doc-article-desc">Core text preprocessing module. Splits text into tokens, handles punctuation removal, lowercasing, stopword filtering, and n-gram generation.</p>
+
+            <div class="doc-card">
+                <h4>Constructor</h4>
+                <pre class="code-block"><code><span class="cls">Tokenizer</span>(
+    lower: <span class="kt">bool</span> = <span class="kc">True</span>,
+    remove_punct: <span class="kt">bool</span> = <span class="kc">True</span>,
+    remove_stopwords: <span class="kt">bool</span> = <span class="kc">False</span>,
+    stopwords: <span class="kt">Optional</span>[<span class="kt">List</span>[<span class="kt">str</span>]] = <span class="kc">None</span>
+)</code></pre>
+            </div>
+
+            <div class="doc-params">
+                <div class="doc-param">
+                    <code>lower</code>
+                    <span class="param-desc">Convert all text to lowercase before tokenization.</span>
+                </div>
+                <div class="doc-param">
+                    <code>remove_punct</code>
+                    <span class="param-desc">Strip punctuation characters using regex <code>[^\w\s]</code>.</span>
+                </div>
+                <div class="doc-param">
+                    <code>remove_stopwords</code>
+                    <span class="param-desc">Filter out common English stopwords (90+ built-in words).</span>
+                </div>
+                <div class="doc-param">
+                    <code>stopwords</code>
+                    <span class="param-desc">Custom stopword list. Falls back to defaults if <code>None</code>.</span>
+                </div>
+            </div>
+
+            <h4>Methods</h4>
+            <div class="doc-methods">
+                <div class="doc-method">
+                    <div class="method-sig">
+                        <code>tokenize(text: str) -> List[str]</code>
+                    </div>
+                    <p>Splits text into word tokens. Applies lowercasing, punctuation removal, and stopword filtering based on configuration.</p>
+                    <pre class="code-block"><code>tk = <span class="cls">Tokenizer</span>(lower=<span class="kc">True</span>, remove_punct=<span class="kc">True</span>)
+tk.<span class="fu">tokenize</span>(<span class="s">"Hello, World! How are you?"</span>)
+<span class="com"># ['hello', 'world', 'how', 'are', 'you']</span></code></pre>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig">
+                        <code>sentence_split(text: str) -> List[str]</code>
+                    </div>
+                    <p>Splits text into sentences using <code>. ! ?</code> as delimiters.</p>
+                    <pre class="code-block"><code>tk.<span class="fu">sentence_split</span>(<span class="s">"Hello world. How are you?"</span>)
+<span class="com"># ['Hello world.', 'How are you?']</span></code></pre>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig">
+                        <code>ngrams(tokens: List[str], n: int = 2) -> List[str]</code>
+                    </div>
+                    <p>Generates contiguous sequences of <code>n</code> tokens from the token list.</p>
+                    <pre class="code-block"><code>tk.<span class="fu">ngrams</span>([<span class="s">"hello"</span>, <span class="s">"world"</span>, <span class="s">"how"</span>, <span class="s">"are"</span>, <span class="s">"you"</span>], <span class="mi">2</span>)
+<span class="com"># ['hello world', 'world how', 'how are', 'are you']</span></code></pre>
+                </div>
+            </div>
+
+            <h4>Stopwords</h4>
+            <p>The built-in stopword list contains over 90 common English words including articles (<code>a, an, the</code>), prepositions (<code>in, on, at, to</code>), pronouns (<code>i, you, he, she</code>), and conjunctions (<code>and, or, but</code>). Access them via the read-only <code>stopwords</code> property.</p>
+        </article>
+
+        <article id="frequency" class="doc-article">
+            <h2 class="doc-article-title">FrequencyAnalyzer</h2>
+            <p class="doc-article-desc">Computes word frequency statistics from a list of tokens. Uses <code>collections.Counter</code> under the hood for efficient counting.</p>
+
+            <div class="doc-card">
+                <h4>Constructor</h4>
+                <pre class="code-block"><code><span class="cls">FrequencyAnalyzer</span>(tokens: <span class="kt">List</span>[<span class="kt">str</span>])</code></pre>
+            </div>
+
+            <h4>Properties</h4>
+            <div class="doc-methods">
+                <div class="doc-method">
+                    <div class="method-sig"><code>total_words -> int</code></div>
+                    <p>Total number of tokens (including duplicates).</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>unique_words -> int</code></div>
+                    <p>Number of distinct tokens.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>tokens -> List[str]</code></div>
+                    <p>Returns a defensive copy of the token list.</p>
+                </div>
+            </div>
+
+            <h4>Methods</h4>
+            <div class="doc-methods">
+                <div class="doc-method">
+                    <div class="method-sig"><code>word_counts() -> Dict[str, int]</code></div>
+                    <p>Returns a dictionary mapping each word to its count.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>top_words(n: int = 10) -> List[Tuple[str, int]]</code></div>
+                    <p>Returns the <code>n</code> most common words with their counts.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>term_frequency(word: str) -> float</code></div>
+                    <p>Term frequency (TF) of a word: <code>count / total_words</code>.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>relative_frequencies() -> Dict[str, float]</code></div>
+                    <p>Relative frequency for every word in the corpus.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>words_above_threshold(threshold: int = 1) -> List[Tuple[str, int]]</code></div>
+                    <p>Filters words with count greater than the threshold.</p>
+                </div>
+            </div>
+        </article>
+
+        <article id="sentiment" class="doc-article">
+            <h2 class="doc-article-title">SentimentAnalyzer</h2>
+            <p class="doc-article-desc">Lexicon-based sentiment analysis using a built-in dictionary of ~50 positive and ~50 negative words. Computes sentiment scores in the range [-1, 1] with configurable labels.</p>
+
+            <div class="doc-card">
+                <h4>Constructor</h4>
+                <pre class="code-block"><code><span class="cls">SentimentAnalyzer</span>(
+    positive_words: <span class="kt">Optional</span>[<span class="kt">Set</span>[<span class="kt">str</span>]] = <span class="kc">None</span>,
+    negative_words: <span class="kt">Optional</span>[<span class="kt">Set</span>[<span class="kt">str</span>]] = <span class="kc">None</span>
+)</code></pre>
+            </div>
+
+            <h4>Score Calculation</h4>
+            <p>The sentiment score is calculated as:</p>
+            <div class="formula-box">
+                <code>score = (positive_count - negative_count) / (positive_count + negative_count)</code>
+            </div>
+            <p>This produces a value between <strong>-1</strong> (all negative) and <strong>+1</strong> (all positive). A score of 0 means neutral or no sentiment words found.</p>
+
+            <h4>Sentiment Labels</h4>
+            <div class="doc-table-wrap">
+                <table class="doc-table">
+                    <tr><th>Score Range</th><th>Label</th></tr>
+                    <tr><td>&gt; 0.3</td><td><span class="tag tag-pos">positive</span></td></tr>
+                    <tr><td>&lt; -0.3</td><td><span class="tag tag-neg">negative</span></td></tr>
+                    <tr><td>-0.3 to 0.3</td><td><span class="tag tag-neu">neutral</span></td></tr>
+                </table>
+            </div>
+
+            <h4>Methods</h4>
+            <div class="doc-methods">
+                <div class="doc-method">
+                    <div class="method-sig"><code>score(tokens: List[str]) -> float</code></div>
+                    <p>Returns a single sentiment score in [-1, 1].</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>detailed_score(tokens: List[str]) -> Dict</code></div>
+                    <p>Returns a comprehensive breakdown including counts, ratios, score, and label.</p>
+                    <pre class="code-block"><code>{
+    <span class="s">"positive_count"</span>: <span class="mi">4</span>,
+    <span class="s">"negative_count"</span>: <span class="mi">1</span>,
+    <span class="s">"positive_ratio"</span>: <span class="mf">0.25</span>,
+    <span class="s">"negative_ratio"</span>: <span class="mf">0.0625</span>,
+    <span class="s">"sentiment_score"</span>: <span class="mf">0.6</span>,
+    <span class="s">"sentiment_label"</span>: <span class="s">"positive"</span>
+}</code></pre>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>positive_matches(tokens) -> List[str]</code></div>
+                    <p>Returns all tokens that match the positive lexicon.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>negative_matches(tokens) -> List[str]</code></div>
+                    <p>Returns all tokens that match the negative lexicon.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>load_custom_lexicon(filepath, sentiment) -> None</code></div>
+                    <p>Loads additional words from a file (one word per line) into the positive or negative lexicon.</p>
+                </div>
+            </div>
+
+            <h4>Built-in Lexicon Samples</h4>
+            <div class="lexicon-grid">
+                <div class="lexicon-col">
+                    <h5>Positive Words</h5>
+                    <div class="lexicon-tags">
+                        <span class="tag tag-pos">good</span>
+                        <span class="tag tag-pos">great</span>
+                        <span class="tag tag-pos">excellent</span>
+                        <span class="tag tag-pos">amazing</span>
+                        <span class="tag tag-pos">wonderful</span>
+                        <span class="tag tag-pos">fantastic</span>
+                        <span class="tag tag-pos">beautiful</span>
+                        <span class="tag tag-pos">love</span>
+                        <span class="tag tag-pos">perfect</span>
+                        <span class="tag tag-pos">brilliant</span>
+                        <span class="tag tag-pos">awesome</span>
+                        <span class="tag tag-pos">superb</span>
+                    </div>
+                </div>
+                <div class="lexicon-col">
+                    <h5>Negative Words</h5>
+                    <div class="lexicon-tags">
+                        <span class="tag tag-neg">bad</span>
+                        <span class="tag tag-neg">terrible</span>
+                        <span class="tag tag-neg">awful</span>
+                        <span class="tag tag-neg">horrible</span>
+                        <span class="tag tag-neg">poor</span>
+                        <span class="tag tag-neg">hate</span>
+                        <span class="tag tag-neg">ugly</span>
+                        <span class="tag tag-neg">sad</span>
+                        <span class="tag tag-neg">angry</span>
+                        <span class="tag tag-neg">disgusting</span>
+                        <span class="tag tag-neg">dreadful</span>
+                        <span class="tag tag-neg">worst</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article id="reporter" class="doc-article">
+            <h2 class="doc-article-title">ReportGenerator</h2>
+            <p class="doc-article-desc">Formats analysis results into human-readable plain text or structured JSON output.</p>
+
+            <div class="doc-card">
+                <h4>Constructor</h4>
+                <pre class="code-block"><code><span class="cls">ReportGenerator</span>(title: <span class="kt">str</span> = <span class="s">"Text Analysis Report"</span>)</code></pre>
+            </div>
+
+            <h4>Methods</h4>
+            <div class="doc-methods">
+                <div class="doc-method">
+                    <div class="method-sig"><code>generate_text(stats, frequencies, sentiment, ngrams=None) -> str</code></div>
+                    <p>Generates a formatted plain text report with tables and sections.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>generate_json(stats, frequencies, sentiment, ngrams=None) -> str</code></div>
+                    <p>Serializes the results as a JSON string.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>write_report(output_path, content) -> None</code></div>
+                    <p>Writes report content to a file.</p>
+                </div>
+            </div>
+        </article>
+
+        <article id="textanalyzer" class="doc-article">
+            <h2 class="doc-article-title">TextAnalyzer</h2>
+            <p class="doc-article-desc">The unified facade that coordinates the entire analysis pipeline. Combines tokenization, frequency analysis, sentiment scoring, and n-gram generation into a single call.</p>
+
+            <div class="doc-card">
+                <h4>Constructor</h4>
+                <pre class="code-block"><code><span class="cls">TextAnalyzer</span>(
+    remove_stopwords: <span class="kt">bool</span> = <span class="kc">False</span>,
+    custom_stopwords: <span class="kt">Optional</span>[<span class="kt">List</span>[<span class="kt">str</span>]] = <span class="kc">None</span>,
+    ngram_range: <span class="kt">Tuple</span>[<span class="kt">int</span>, <span class="kt">int</span>] = (<span class="mi">2</span>, <span class="mi">3</span>),
+    report_title: <span class="kt">str</span> = <span class="s">"Text Analysis Report"</span>
+)</code></pre>
+            </div>
+
+            <h4>Methods</h4>
+            <div class="doc-methods">
+                <div class="doc-method">
+                    <div class="method-sig"><code>analyze(text: str) -> Dict</code></div>
+                    <p>Runs the full analysis pipeline on a string. Returns a dictionary with keys: <code>statistics</code>, <code>frequencies</code>, <code>sentiment</code>, <code>ngrams</code>, <code>tokens</code>.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>analyze_file(filepath: str, encoding="utf-8") -> Dict</code></div>
+                    <p>Reads a file and runs the full analysis pipeline.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>report_text(result: Dict) -> str</code></div>
+                    <p>Convenience wrapper that generates a text report from an analysis result.</p>
+                </div>
+                <div class="doc-method">
+                    <div class="method-sig"><code>report_json(result: Dict) -> str</code></div>
+                    <p>Convenience wrapper that generates a JSON report from an analysis result.</p>
+                </div>
+            </div>
+
+            <div class="doc-card">
+                <h4>Return Value (analyze)</h4>
+                <pre class="code-block"><code>{
+    <span class="s">"statistics"</span>: {
+        <span class="s">"total_words"</span>: <span class="kt">int</span>,
+        <span class="s">"unique_words"</span>: <span class="kt">int</span>,
+        <span class="s">"sentences"</span>: <span class="kt">int</span>,
+        <span class="s">"avg_word_length"</span>: <span class="kt">float</span>
+    },
+    <span class="s">"frequencies"</span>: {
+        <span class="s">"top_words"</span>: [<span class="kt">Tuple</span>[<span class="kt">str</span>, <span class="kt">int</span>], ...],
+        <span class="s">"unique_words"</span>: <span class="kt">int</span>,
+        <span class="s">"relative"</span>: {<span class="kt">str</span>: <span class="kt">float</span>}
+    },
+    <span class="s">"sentiment"</span>: {
+        <span class="s">"positive_count"</span>: <span class="kt">int</span>,
+        <span class="s">"negative_count"</span>: <span class="kt">int</span>,
+        <span class="s">"sentiment_score"</span>: <span class="kt">float</span>,
+        <span class="s">"sentiment_label"</span>: <span class="kt">str</span>,
+        ...
+    },
+    <span class="s">"ngrams"</span>: {
+        <span class="s">"2"</span>: [(<span class="s">"bigram"</span>, <span class="kt">int</span>), ...],
+        <span class="s">"3"</span>: [(<span class="s">"trigram"</span>, <span class="kt">int</span>), ...]
+    },
+    <span class="s">"tokens"</span>: [<span class="kt">str</span>, ...]
+}</code></pre>
+            </div>
+        </article>
+
+        <article id="cli" class="doc-article">
+            <h2 class="doc-article-title">CLI Reference</h2>
+            <p class="doc-article-desc">Command-line interface for analyzing text files or inline text directly from the terminal.</p>
+
+            <div class="doc-card">
+                <pre class="code-block"><code>text-analysis [file] [options]</code></pre>
+            </div>
+
+            <h4>Options</h4>
+            <div class="doc-table-wrap">
+                <table class="doc-table">
+                    <tr><th>Flag</th><th>Description</th></tr>
+                    <tr><td><code>file</code></td><td>Path to text file (positional, optional if <code>-t</code> used)</td></tr>
+                    <tr><td><code>-t, --text</code></td><td>Analyze inline text instead of a file</td></tr>
+                    <tr><td><code>-o, --output</code></td><td>Write report to file</td></tr>
+                    <tr><td><code>-f, --format</code></td><td>Output format: <code>text</code> (default) or <code>json</code></td></tr>
+                    <tr><td><code>--no-stopwords</code></td><td>Remove common stopwords</td></tr>
+                    <tr><td><code>--ngram-min</code></td><td>Minimum n-gram size (default: 2)</td></tr>
+                    <tr><td><code>--ngram-max</code></td><td>Maximum n-gram size (default: 3)</td></tr>
+                </table>
+            </div>
+
+            <h4>Examples</h4>
+            <pre class="code-block"><code><span class="com"># Analyze a file</span>
+text-analysis samples/positive_review.txt
+
+<span class="com"># JSON output</span>
+text-analysis samples/mixed_article.txt -f json
+
+<span class="com"># With stopword removal</span>
+text-analysis samples/negative_review.txt --no-stopwords
+
+<span class="com"># Inline text</span>
+text-analysis -t <span class="s">"I love this amazing product!"</span>
+
+<span class="com"># Save to file</span>
+text-analysis samples/article.txt -o report.txt
+
+<span class="com"># Custom n-gram range</span>
+text-analysis samples/article.txt --ngram-min 1 --ngram-max 4</code></pre>
+        </article>
+
+    </div>
+</section>
+{% endblock %}

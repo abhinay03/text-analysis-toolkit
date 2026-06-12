@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+{% block title %}Live Demo — Text Analysis Toolkit{% endblock %}
+{% block content %}
+<section class="demo-page">
+    <div class="section-container">
+        <div class="section-header">
+            <h1 class="section-title">Interactive Demo</h1>
+            <p class="section-desc">Type or paste any text below and get instant tokenization, frequency analysis, sentiment scoring, and n-gram generation.</p>
+        </div>
+
+        <div class="demo-layout">
+            <div class="demo-panel demo-input-panel">
+                <div class="demo-panel-header">
+                    <h3>Input Text</h3>
+                </div>
+                <div class="demo-panel-body">
+                    <textarea id="demo-text" class="demo-textarea demo-textarea-lg" rows="8" placeholder="Enter text to analyze...">The product quality is absolutely amazing and wonderful. I love how well it works and the results are fantastic. However, the customer service was terrible and disappointing. The shipping was also poor and frustrating. Overall, a mixed experience with some great features but awful support.</textarea>
+                    <div class="demo-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="demo-stopwords">
+                            <span class="checkbox-custom"></span>
+                            Remove stopwords
+                        </label>
+                        <div class="ngram-options">
+                            <label class="opt-label">
+                                <span>N-gram min:</span>
+                                <input type="number" id="ngram-min" value="2" min="1" max="5" class="opt-input">
+                            </label>
+                            <label class="opt-label">
+                                <span>N-gram max:</span>
+                                <input type="number" id="ngram-max" value="3" min="1" max="5" class="opt-input">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="demo-samples">
+                        <span class="samples-label">Try a sample:</span>
+                        <button onclick="loadSample('positive')" class="btn btn-sm btn-ghost">Positive Review</button>
+                        <button onclick="loadSample('negative')" class="btn btn-sm btn-ghost">Negative Review</button>
+                        <button onclick="loadSample('mixed')" class="btn btn-sm btn-ghost">Mixed Article</button>
+                    </div>
+                    <button onclick="fullAnalyze()" class="btn btn-primary btn-lg btn-full" id="demo-btn">
+                        <span class="btn-text">Analyze Text</span>
+                        <span class="btn-loader" style="display:none">
+                            <svg viewBox="0 0 24 24" width="18" height="18" class="spin"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4"/></svg>
+                            Analyzing...
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-panel demo-results-panel" id="demo-results" style="display:none">
+                <div class="demo-panel-header">
+                    <h3>Analysis Results</h3>
+                    <div class="results-tabs">
+                        <button class="results-tab active" data-panel="stats">Statistics</button>
+                        <button class="results-tab" data-panel="freq">Frequency</button>
+                        <button class="results-tab" data-panel="sentiment">Sentiment</button>
+                        <button class="results-tab" data-panel="ngrams">N-Grams</button>
+                        <button class="results-tab" data-panel="report">Full Report</button>
+                    </div>
+                </div>
+                <div class="demo-panel-body results-body">
+
+                    <div class="results-panel active" id="panel-stats">
+                        <h4>Text Statistics</h4>
+                        <div class="stats-grid" id="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="r-words">0</div>
+                                <div class="stat-label">Total Words</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="r-unique">0</div>
+                                <div class="stat-label">Unique Words</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="r-sentences">0</div>
+                                <div class="stat-label">Sentences</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="r-avg-len">0.00</div>
+                                <div class="stat-label">Avg Word Length</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="r-pos">0</div>
+                                <div class="stat-label">Positive Words</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="r-neg">0</div>
+                                <div class="stat-label">Negative Words</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-panel" id="panel-freq">
+                        <h4>Word Frequency</h4>
+                        <div class="freq-table-wrap">
+                            <table class="freq-table" id="freq-table">
+                                <thead>
+                                    <tr><th>#</th><th>Word</th><th>Count</th><th>Frequency</th><th>Bar</th></tr>
+                                </thead>
+                                <tbody id="freq-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="results-panel" id="panel-sentiment">
+                        <h4>Sentiment Analysis</h4>
+                        <div class="sentiment-display">
+                            <div class="sentiment-gauge">
+                                <div class="gauge-container">
+                                    <svg viewBox="0 0 120 120" class="gauge-svg">
+                                        <circle cx="60" cy="60" r="54" fill="none" stroke="#1e293b" stroke-width="8"/>
+                                        <circle cx="60" cy="60" r="54" fill="none" stroke="var(--gauge-color, #6366f1)" stroke-width="8"
+                                            stroke-dasharray="339.292" stroke-dashoffset="169.646"
+                                            transform="rotate(-90 60 60)" id="gauge-arc"/>
+                                    </svg>
+                                    <div class="gauge-text">
+                                        <span class="gauge-score" id="r-sent-score">0.00</span>
+                                        <span class="gauge-label" id="r-sent-label">neutral</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sentiment-details">
+                                <div class="sent-detail">
+                                    <span class="sent-detail-label">Positive Count</span>
+                                    <span class="sent-detail-val pos" id="r-det-pos">0</span>
+                                </div>
+                                <div class="sent-detail">
+                                    <span class="sent-detail-label">Negative Count</span>
+                                    <span class="sent-detail-val neg" id="r-det-neg">0</span>
+                                </div>
+                                <div class="sent-detail">
+                                    <span class="sent-detail-label">Positive Ratio</span>
+                                    <span class="sent-detail-val" id="r-det-pos-ratio">0%</span>
+                                </div>
+                                <div class="sent-detail">
+                                    <span class="sent-detail-label">Negative Ratio</span>
+                                    <span class="sent-detail-val" id="r-det-neg-ratio">0%</span>
+                                </div>
+                                <hr class="sent-divider">
+                                <div class="sent-matched">
+                                    <div>
+                                        <span class="sent-match-label">Positive Matches</span>
+                                        <div class="match-tags" id="r-pos-matches"></div>
+                                    </div>
+                                    <div>
+                                        <span class="sent-match-label">Negative Matches</span>
+                                        <div class="match-tags" id="r-neg-matches"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-panel" id="panel-ngrams">
+                        <h4>N-Gram Analysis</h4>
+                        <div id="ngrams-container"></div>
+                    </div>
+
+                    <div class="results-panel" id="panel-report">
+                        <div class="report-actions">
+                            <h4>Full Text Report</h4>
+                            <div class="report-btns">
+                                <button onclick="copyReport()" class="btn btn-sm btn-ghost">Copy</button>
+                                <button onclick="downloadReport()" class="btn btn-sm btn-ghost">Download</button>
+                            </div>
+                        </div>
+                        <pre class="report-block" id="report-block"></pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+const SAMPLES = {
+    positive: `I absolutely love this amazing product! It is fantastic and wonderful. The quality is outstanding and the service was excellent. Every feature is brilliant and well-designed. I am very happy with my purchase and would highly recommend it to everyone. This is truly a remarkable and incredible experience.`,
+    negative: `This is the worst product I have ever purchased. The quality is terrible and the service was awful. I hate how poorly it works and the results are disgusting. The customer support is useless and frustrating. A complete waste of money. Absolutely dreadful experience from start to finish.`,
+    mixed: `The product quality is absolutely amazing and wonderful. I love how well it works and the results are fantastic. However, the customer service was terrible and disappointing. The shipping was also poor and frustrating. Overall, a mixed experience with some great features but awful support.`
+};
+
+let lastResult = null;
+
+function loadSample(type) {
+    document.getElementById('demo-text').value = SAMPLES[type];
+}
+
+async function fullAnalyze() {
+    const text = document.getElementById('demo-text').value.trim();
+    if (!text) return;
+
+    const btn = document.getElementById('demo-btn');
+    const btnText = btn.querySelector('.btn-text');
+    const btnLoader = btn.querySelector('.btn-loader');
+    btnText.style.display = 'none';
+    btnLoader.style.display = 'inline-flex';
+    btn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('text', text);
+    formData.append('remove_stopwords', document.getElementById('demo-stopwords').checked);
+    formData.append('ngram_min', parseInt(document.getElementById('ngram-min').value) || 2);
+    formData.append('ngram_max', parseInt(document.getElementById('ngram-max').value) || 3);
+
+    try {
+        const res = await fetch('/api/analyze', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.error);
+
+        lastResult = data;
+        displayResults(data);
+
+        document.getElementById('demo-results').style.display = 'block';
+        document.getElementById('demo-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+        alert('Error: ' + err.message);
+    } finally {
+        btnText.style.display = 'inline';
+        btnLoader.style.display = 'none';
+        btn.disabled = false;
+    }
+}
+
+function displayResults(data) {
+    const s = data.statistics;
+    document.getElementById('r-words').textContent = s.total_words;
+    document.getElementById('r-unique').textContent = s.unique_words;
+    document.getElementById('r-sentences').textContent = s.sentences;
+    document.getElementById('r-avg-len').textContent = s.avg_word_length;
+    document.getElementById('r-pos').textContent = data.sentiment.positive_count;
+    document.getElementById('r-neg').textContent = data.sentiment.negative_count;
+
+    const freqBody = document.getElementById('freq-body');
+    freqBody.innerHTML = '';
+    const maxCount = data.frequencies.top_words[0]?.count || 1;
+    data.frequencies.top_words.forEach((item, i) => {
+        const pct = ((item.count / s.total_words) * 100).toFixed(1);
+        const barWidth = (item.count / maxCount) * 100;
+        freqBody.innerHTML += `<tr>
+            <td class="rank">${i + 1}</td>
+            <td class="word">${item.word}</td>
+            <td class="count">${item.count}</td>
+            <td class="pct">${pct}%</td>
+            <td class="bar-cell"><div class="freq-bar" style="width:${barWidth}%"></div></td>
+        </tr>`;
+    });
+
+    const sent = data.sentiment;
+    document.getElementById('r-sent-score').textContent = sent.sentiment_score.toFixed(3);
+    document.getElementById('r-sent-label').textContent = sent.sentiment_label;
+
+    const gauge = document.getElementById('gauge-arc');
+    const offset = 339.292 * (1 - (sent.sentiment_score + 1) / 2);
+    gauge.style.strokeDashoffset = offset;
+    const hue = sent.sentiment_score > 0 ? 142 : sent.sentiment_score < 0 ? 0 : 200;
+    gauge.style.setProperty('--gauge-color', `hsl(${hue}, 70%, 55%)`);
+    gauge.style.stroke = `hsl(${hue}, 70%, 55%)`;
+
+    document.getElementById('r-det-pos').textContent = sent.positive_count;
+    document.getElementById('r-det-neg').textContent = sent.negative_count;
+    document.getElementById('r-det-pos-ratio').textContent = (sent.positive_ratio * 100).toFixed(1) + '%';
+    document.getElementById('r-det-neg-ratio').textContent = (sent.negative_ratio * 100).toFixed(1) + '%';
+
+    const posTags = document.getElementById('r-pos-matches');
+    const negTags = document.getElementById('r-neg-matches');
+    const posMatchList = data.tokens.filter(t => data.sentiment.positive_count > 0 && ['good','great','excellent','amazing','wonderful','fantastic','beautiful','love','perfect','brilliant','awesome','superb','outstanding','positive','best','favourite','fun','enjoy','pleasure','glad','grateful','thankful','marvelous','splendid','magnificent','tremendous','remarkable','pleasant','cheerful','optimistic','hopeful','success','triumph','victory','benefit','better','nice','kind','generous','caring','helpful','lovely','wonderful','impressive','incredible','fabulous','terrific'].includes(t));
+    const negMatchList = data.tokens.filter(t => ['bad','terrible','awful','horrible','poor','hate','ugly','sad','angry','furious','disgusting','dreadful','worst','mediocre','boring','annoying','frustrating','disappointing','pathetic','inferior','negative','failure','useless','horrendous','atrocious','abysmal','gross','nasty','cruel','evil','wicked','painful','suffering','tragic','gloomy','depressing','hopeless','dismal','disaster','catastrophe','damage','harmful','toxic','vile','hideous','lousy','rotten','shameful','unpleasant','miserable','unhappy'].includes(t));
+    posTags.innerHTML = posMatchList.map(w => `<span class="tag tag-pos">${w}</span>`).join('') || '<span class="no-match">None</span>';
+    negTags.innerHTML = negMatchList.map(w => `<span class="tag tag-neg">${w}</span>`).join('') || '<span class="no-match">None</span>';
+
+    const ngramContainer = document.getElementById('ngrams-container');
+    ngramContainer.innerHTML = '';
+    for (const [n, items] of Object.entries(data.ngrams)) {
+        const label = n === '2' ? 'Bigrams' : n === '3' ? 'Trigrams' : `${n}-grams`;
+        ngramContainer.innerHTML += `<h5 class="ngram-title">Top ${label}</h5>
+            <table class="freq-table ngram-table">
+                <thead><tr><th>#</th><th>${label}</th><th>Count</th></tr></thead>
+                <tbody>${items.map((item, i) =>
+                    `<tr><td class="rank">${i+1}</td><td class="word">${item.ngram}</td><td class="count">${item.count}</td></tr>`
+                ).join('')}</tbody>
+            </table>`;
+    }
+
+    document.getElementById('report-block').textContent = data.text_report;
+
+    switchTab('stats');
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.results-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.results-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.results-tab[data-panel="${tab}"]`).classList.add('active');
+    document.getElementById(`panel-${tab}`).classList.add('active');
+}
+
+document.querySelectorAll('.results-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.panel));
+});
+
+function copyReport() {
+    if (!lastResult) return;
+    navigator.clipboard.writeText(lastResult.text_report);
+}
+
+function downloadReport() {
+    if (!lastResult) return;
+    const blob = new Blob([lastResult.text_report], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'text-analysis-report.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}

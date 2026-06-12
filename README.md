@@ -1,6 +1,22 @@
 # Text Analysis Toolkit
 
-A Python package for tokenization, word frequency analysis, sentiment scoring, and report generation on text files or articles.
+A production-ready Python package for tokenization, word frequency analysis, sentiment scoring, and report generation — built entirely on Python's standard library with **zero external dependencies**.
+
+<p align="center">
+  <a href="https://github.com/abhinay03/text-analysis-toolkit"><strong>GitHub</strong></a> ·
+  <a href="#quick-start"><strong>Quick Start</strong></a> ·
+  <a href="#features"><strong>Features</strong></a> ·
+  <a href="#usage"><strong>Usage</strong></a>
+</p>
+
+## Features
+
+- **Tokenization** — word/sentence splitting, punctuation removal, stopword filtering, n-gram generation
+- **Frequency Analysis** — word counts, top-N, term frequency (TF), relative frequencies, threshold filtering
+- **Sentiment Scoring** — lexicon-based scoring (-1 to +1) with 100+ built-in positive/negative words, custom lexicon support
+- **Report Generation** — plain text and JSON report output with formatted tables
+- **CLI** — command-line interface for analyzing text files or inline text
+- **Web Interface** — interactive demo with FastAPI (optional)
 
 ## Authors
 
@@ -9,24 +25,32 @@ A Python package for tokenization, word frequency analysis, sentiment scoring, a
 - Sandeep Hidellarachchi
 - Kevin Luke Prashanth
 
-## Features
+---
 
-- **Tokenization** — word/sentence splitting, punctuation removal, stopword filtering, n-gram generation
-- **Frequency Analysis** — word counts, top-N, term frequency (TF), relative frequencies
-- **Sentiment Scoring** — lexicon-based scoring with positive/negative word lists, custom lexicon support
-- **Report Generation** — plain text and JSON report output
-- **CLI** — command-line interface for analyzing text files
+## Quick Start
 
-## Installation
-
-No external dependencies required (pure Python standard library).
+### Installation (Core — No Dependencies)
 
 ```bash
 cd text-analysis-toolkit
 pip install -e .
 ```
 
+### Installation (Web Interface)
+
+```bash
+pip install -r requirements.txt
+uvicorn webapp.main:app --reload
+# Open http://localhost:8000
+```
+
+---
+
 ## Usage
+
+### Web Interface
+
+Visit the interactive demo at **http://localhost:8000/demo** after starting the web server.
 
 ### Command Line
 
@@ -154,13 +178,24 @@ text-analysis-toolkit/
 │   ├── reporter.py          # ReportGenerator class
 │   ├── analyzer.py          # TextAnalyzer facade
 │   ├── cli.py               # Command-line interface
-│   ├── tests/
-│   │   ├── test_tokenizer.py
-│   │   ├── test_frequency.py
-│   │   ├── test_sentiment.py
-│   │   ├── test_reporter.py
-│   │   └── test_analyzer.py
-│   └── data/                # Custom lexicon directory
+│   └── tests/               # Comprehensive test suite (46+ tests)
+│       ├── test_tokenizer.py
+│       ├── test_frequency.py
+│       ├── test_sentiment.py
+│       ├── test_reporter.py
+│       └── test_analyzer.py
+├── webapp/
+│   ├── main.py              # FastAPI web application
+│   ├── run.py               # Entry point for development server
+│   ├── templates/           # Jinja2 templates
+│   │   ├── base.html
+│   │   ├── index.html       # Landing page
+│   │   ├── documentation.html
+│   │   ├── demo.html        # Interactive demo
+│   │   └── about.html
+│   └── static/
+│       ├── css/style.css
+│       └── js/main.js
 ├── samples/
 │   ├── positive_review.txt
 │   ├── negative_review.txt

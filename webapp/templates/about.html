@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}About — Text Analysis Toolkit{% endblock %}
+{% block content %}
+<section class="about-hero">
+    <div class="section-container">
+        <div class="about-hero-content">
+            <h1 class="about-title">About the Project</h1>
+            <p class="about-subtitle">
+                A production-ready Natural Language Processing toolkit built entirely on
+                Python's standard library — developed as part of the Advanced Programming
+                course at SRH University.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="section-container">
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>The Problem</h3>
+                <p>Most Python NLP libraries like NLTK, spaCy, and TextBlob require heavy external dependencies, complex installation, and large model downloads. For many text analysis tasks — especially in educational and lightweight production contexts — this overhead is unnecessary.</p>
+            </div>
+            <div class="about-card">
+                <h3>Our Solution</h3>
+                <p>The Text Analysis Toolkit provides essential NLP functionality — tokenization, frequency analysis, sentiment scoring, and report generation — with <strong>zero external dependencies</strong>. Install it and use it immediately.</p>
+            </div>
+            <div class="about-card">
+                <h3>Design Philosophy</h3>
+                <p>Every class and function is designed for clarity and composability. Use modules independently or combine them through the <code>TextAnalyzer</code> facade. The API mirrors natural language so your code reads like a description of what it does.</p>
+            </div>
+        </div>
+
+        <div class="tech-stack-section">
+            <h2 class="section-title">Built With</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <span class="tech-name">Python 3.9+</span>
+                    <span class="tech-desc">Modern type hints, dataclasses, and standard library features</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-name">collections.Counter</span>
+                    <span class="tech-desc">Efficient frequency counting and n-gram aggregation</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-name">re (regex)</span>
+                    <span class="tech-desc">Tokenization, punctuation removal, sentence splitting</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-name">argparse</span>
+                    <span class="tech-desc">CLI argument parsing with help and validation</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-name">pathlib</span>
+                    <span class="tech-desc">Cross-platform file path handling</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-name">unittest</span>
+                    <span class="tech-desc">Comprehensive test suite with 46+ test cases</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-name">FastAPI</span>
+                    <span class="tech-desc">Modern async web framework for this interface</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-name">setuptools</span>
+                    <span class="tech-desc">Packaging and distribution via pyproject.toml</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2 class="section-title">Meet the Team</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <span class="avatar-initials">ME</span>
+                    </div>
+                    <h3 class="team-name">Manikanta Engalligi</h3>
+                    <p class="team-role">Developer</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <span class="avatar-initials">AS</span>
+                    </div>
+                    <h3 class="team-name">Abhinay Sambherao</h3>
+                    <p class="team-role">Developer</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <span class="avatar-initials">SH</span>
+                    </div>
+                    <h3 class="team-name">Sandeep Hidellarachchi</h3>
+                    <p class="team-role">Developer</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <span class="avatar-initials">KP</span>
+                    </div>
+                    <h3 class="team-name">Kevin Luke Prashanth</h3>
+                    <p class="team-role">Developer</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-cta">
+            <h2>Ready to try it?</h2>
+            <p>Analyze text instantly with our interactive demo, or install the package locally.</p>
+            <div class="cta-actions">
+                <a href="/demo" class="btn btn-primary btn-lg">Try Live Demo</a>
+                <a href="https://github.com/abhinay03/text-analysis-toolkit" target="_blank" class="btn btn-secondary btn-lg">View on GitHub</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
